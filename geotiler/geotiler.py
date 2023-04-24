@@ -3,6 +3,10 @@ This module contains the GeoTiler class, which is used to generate UTM tiles for
 """
 
 
+from pathlib import Path
+
+import geopandas as gpd
+
 from geotiler.place import Place
 from geotiler.tile import Tile
 
@@ -86,7 +90,7 @@ class GeoTiler:
 
         tiles = self.tiles_list(tile_size, stride)
         gdf = gpd.GeoDataFrame(
-            {"id": [tile.identifier for tile in tiles],
+            {"tile_id": [tile.tile_id for tile in tiles],
             "geometry": [tile.wgs_geometry for tile in tiles],
         })
         gdf.set_crs("EPSG:4326", inplace=True)

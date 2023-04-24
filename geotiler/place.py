@@ -19,17 +19,17 @@ class Place:
         wgs_geometry (shapely.geometry.base.BaseGeometry): The input geometry transformed to WGS84 (EPSG:4326).
     """
 
-    def __init__(self, input_crs, input_geometry):
+    def __init__(self, input_geometry, input_crs):
         """
         Initializes a Place object with an input CRS and geometry.
 
         Args:
-            input_crs (str or pyproj.CRS): The input Coordinate Reference System.
             input_geometry (dict or shapely.geometry.base.BaseGeometry): The input geometry as a GeoJSON dictionary
                 or shapely object.
+            input_crs (str or pyproj.CRS): The input Coordinate Reference System.
         """
-        self.input_crs = CRS(input_crs)
         self.input_geometry = self._to_shapely_geometry(input_geometry)
+        self.input_crs = CRS(input_crs)
         self.wgs_geometry = self.transform_to_crs("EPSG:4326")
 
 
