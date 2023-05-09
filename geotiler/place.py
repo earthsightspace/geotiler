@@ -94,7 +94,7 @@ class Place:
         return epsg_code
 
 
-    def _generate_grid_points(self, resolution=0.1):
+    def _generate_grid_points(self, resolution=0.5):
         """
         Generate a grid of points within the geometry.
 
@@ -120,7 +120,20 @@ class Place:
         return grid_points
 
 
-    def find_intersecting_utm_zones(self, resolution=0.1):
+    def _extract_utm_zone_number(self, crs):
+        """
+        Extracts the UTM zone number from a pyproj.CRS object.
+
+        Args:
+            crs (pyproj.CRS): The input CRS.
+
+        Returns:
+            int: The UTM zone number.
+        """
+        return int(crs.to_authority()[1][1:])
+
+
+    def find_intersecting_utm_zones(self, resolution=0.5):
         """
         Finds all intersecting UTM zones for the input geometry.
 
@@ -138,5 +151,8 @@ class Place:
             epsg_code = self._utm_epsg_for_point(point.x, point.y)
             intersecting_zones.add(CRS.from_epsg(epsg_code))
 
+        # sort the zones by zone number
+        intersecting_zones = sorted(intersecting_zones, key=self._extract_utm_zone_number)
+        
         return intersecting_zones
 
